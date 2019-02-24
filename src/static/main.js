@@ -2,7 +2,7 @@ $(document).ready(function () {
     const ps = new PerfectScrollbar('.scroll');
     
     var dropzone = new Dropzone("#imageInput", {
-        url: window.location.href+'/image',
+        url: window.location.href+'image',
         method: 'POST',
         clickable: "#imageContainer",
         acceptedFiles: 'image/*',

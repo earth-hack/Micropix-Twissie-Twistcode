@@ -20,7 +20,7 @@ Machine Learning Library
 ## Application Setup
 - Install all the library required
 ```
-pip3 install flask torch torchvision fastai scikit-learn numpy scipy pandas
+pip3 install flask torch torchvision fastai scikit-learn numpy scipy pandas statsmodels
 ```
 - Run the script to initialize the server
 ```

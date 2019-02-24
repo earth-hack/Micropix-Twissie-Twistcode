@@ -22,6 +22,9 @@ Machine Learning Library
 ```
 pip3 install flask torch torchvision fastai scikit-learn numpy scipy pandas
 ```
+- Download the trained models and data from google drive
+  - `https://1drv.ms/f/s!ArJJyxURU-h_h5QECCEsR1SG6cGZdQ` files to src/satellite/models
+  - `https://1drv.ms/f/s!ArJJyxURU-h_h5QDNLfWbj2uhY54aw` files to src/satellite/train
 - Run the script to initialize the server
 ```
 python3 server.py

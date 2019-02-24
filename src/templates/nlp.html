@@ -1,0 +1,127 @@
+<!doctype html>
+
+<html lang="en">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<head>
+  <meta charset="utf-8">
+  <title>Earth-Hack 2019</title>
+  <meta name="description" content="Earth-Hack 2019">
+  <meta name="author" content="Twistcode">
+  <link rel="stylesheet" href="static/bootstrap.min.css">
+  <link rel="stylesheet" href="static/dropzone.css">
+  <link rel="stylesheet" href="static/simplebar.css">
+  <link rel="stylesheet" href="//cdn.datatables.net/1.10.19/css/jquery.dataTables.min.css">
+  <script src="static/jquery.js"></script>
+  <script src="//cdn.datatables.net/1.10.19/js/jquery.dataTables.min.js"></script>
+  <script src="static/bootstrap.min.js"></script>
+    <style>
+        .matrix {
+    position: relative;
+}
+.matrix:before, .matrix:after {
+    content: "";
+    position: absolute;
+    top: 0;
+    border: 1px solid #000;
+    width: 6px;
+    height: 100%;
+}
+.matrix:before {
+    left: -6px;
+    border-right: 0px;
+}
+.matrix:after {
+    right: -6px;
+    border-left: 0px;
+}
+.matrix td {
+    padding: 5px;    
+    text-align: center;
+}
+
+    </style>
+
+</head>
+
+<body>
+  <div class="container">
+    <div class="py-4 d-flex justify-content-between">
+      <div style="border-left:2px solid #42bcf4" class="pl-4 d-none d-md-block">
+        <h4 class="display-4 mb-0">EAGE</h4>
+        <h1><b>Earth-Hack</b></h1>
+      </div>
+      <div class="d-md-none"> 
+          <img src="static/logo-sm.png" class="img-fluid">
+        </div>
+      <div class="d-none d-sm-none d-md-block"> 
+          <img src="static/logo.png" class="img-fluid">
+        </div>
+    </div>
+    <div>
+        <button type="button" class="btn btn-primary" id="generateBtn">Generate</button>
+        <br>
+        <div class="lds-facebook" style="display:none"><div></div><div></div><div></div></div>
+    </div>
+    <div class="my-4" id="outputContainer">
+
+    </div>
+  </div>
+
+  <script src="static/simplebar.js"></script>
+  <script>
+      $('#generateBtn').click(function (e) { 
+          $('.lds-facebook').show();
+          $.ajax({
+              type: "POST",
+              url: window.location.href,
+              success: function (response) {
+                $('.lds-facebook').hide();
+                printOutput(response);
+              }
+          });
+      });
+
+      function printOutput(output){
+          console.log(output.output);
+          htmlString = '<p><b>Classifier</b>: '+output.output[0]['name']+'</p>'+
+          '<p><b>Score</b>: '+output.output[0]['score']+'</p>'+
+          '<p class="mb-0"><b>Confusion Matrix</b>: </p>'+
+          '<table class="matrix mb-4"><tr><td>'+output.output[1]['ll']+'</td><td>'+output.output[1]['lr']+'</td></tr><tr><td>'+output.output[1]['ul']+'</td><td>-'+output.output[1]['ur']+'</td></tr></table>'+
+          '<p><b>Classification Report</b>: </p>'+
+          '<pre style="text-align:left">'+output.output[2]['end']+'</pre>';
+
+          let table = "<table id='datatable' class='table-responsive'><thead><tr>";
+          let tableHeader = output.output[4];
+          tableHeader.push('Status');
+          let tableData = output.output[3];
+            
+
+          tableHeader.forEach(element => {
+            table = table + '<th>' + element + '</th>';
+          })
+          table = table + '</tr></thead><tbody>'
+          tableData.forEach(row => {
+            let label = row[row.length-2];
+            let prediction = row[row.length-1];
+            table = table + '<tr>';
+            row.forEach( element => {
+                table = table + '<td>' + element + '</td>';
+            });
+            if (label ==  prediction ) {
+                table = table + '<td style="background-color:green"></td></tr>';
+            } else 
+                table = table + '<td></td></tr>';
+          });
+        $('#outputContainer').html(htmlString+table);
+        $('#datatable').DataTable({
+            // "data": output.output[3],
+            "responsive": true,
+            "paging": false
+        });
+      }
+  </script>
+
+</body>
+
+</html>
